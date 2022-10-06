@@ -19,6 +19,7 @@ code {
   padding: 5px;
   background-color: #ffffff;
   min-height: 98vh;
+  position: relative;
 }
 
 .todo-input-container {
@@ -124,4 +125,15 @@ ul {
 }
 .btn-group > * + * {
   margin-left: 0.8rem;
+}
+
+.sync-container {
+  width: 98.2%;
+  position: absolute;
+  bottom: 1px;
+}
+
+.sync-container > button {
+  box-sizing: border-box;
+  width: 100%;
 }

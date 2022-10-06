@@ -16,14 +16,25 @@ const FILTER_MAP = {
 
 const FILTER_NAMES = Object.keys(FILTER_MAP);
 
+const fetchLocalTasks = function () {
+  let storedTasks = localStorage.getItem("tasks-todox");
+  if (storedTasks) {
+    return JSON.parse(storedTasks);
+  }
+
+  return storedTasks;
+};
+
 function App() {
-  const [tasks, setTasks] = useState(defaultTasks);
+  const previousTasks = fetchLocalTasks() || defaultTasks;
+  const [tasks, setTasks] = useState(previousTasks);
   const [filter, setFilter] = useState("All");
 
   function addTask(task) {
     const newTasks = tasks.concat(task);
 
     setTasks(newTasks);
+    updateLocalTasks(newTasks);
   }
 
   function handleToggle(id) {
@@ -35,12 +46,14 @@ function App() {
     });
 
     setTasks(updatedTasks);
+    updateLocalTasks(updatedTasks);
   }
 
   function deleteTask(id) {
     const updatedTasks = tasks.filter((task) => task.id !== id);
 
     setTasks(updatedTasks);
+    updateLocalTasks(updatedTasks);
   }
 
   function updateTask(id, name) {
@@ -53,6 +66,11 @@ function App() {
     });
 
     setTasks(updatedTasks);
+    updateLocalTasks(updatedTasks);
+  }
+
+  function updateLocalTasks(tasks) {
+    localStorage.setItem("tasks-todox", JSON.stringify(tasks));
   }
 
   const filterList = FILTER_NAMES.map((name) => (
@@ -63,6 +81,18 @@ function App() {
       setFilter={setFilter}
     />
   ));
+
+  const syncElem = fetchLocalTasks() === null && (
+    <div
+      className="sync-container"
+      onClick={() => {
+        updateLocalTasks(tasks);
+        window.location.reload();
+      }}
+    >
+      <button>Sync Tasks</button>
+    </div>
+  );
 
   return (
     <div className="app-container">
@@ -77,6 +107,7 @@ function App() {
         filter={filter}
         filterMap={FILTER_MAP}
       />
+      {syncElem}
     </div>
   );
 }
