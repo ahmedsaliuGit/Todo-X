@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import FilterButton from "./components/FilterButton";
 import TodoInput from "./components/TodoInput";
 import Todos from "./components/Todos";
 
 const defaultTasks = [
-  { id: 1, name: "Cooling off", isComplete: false },
+  { id: 1, name: "Meeting CEO", isComplete: false },
   { id: 2, name: "Shopping", isComplete: true },
 ];
 
@@ -22,22 +22,13 @@ const fetchLocalTasks = function () {
     return JSON.parse(storedTasks);
   }
 
-  return storedTasks;
+  return defaultTasks;
 };
 
 function App() {
-  const [tasks, setTasks] = useState([]);
-  useEffect(() => {
-    loadLocalTasks();
-  }, []);
+  const [tasks, setTasks] = useState(fetchLocalTasks());
 
   const [filter, setFilter] = useState("All");
-
-  function loadLocalTasks() {
-    const localTasks = fetchLocalTasks();
-
-    localTasks !== null ? setTasks(localTasks) : setTasks(defaultTasks);
-  }
 
   function addTask(task) {
     const newTasks = tasks.concat(task);
