@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FilterButton from "./components/FilterButton";
 import TodoInput from "./components/TodoInput";
 import Todos from "./components/Todos";
@@ -26,9 +26,18 @@ const fetchLocalTasks = function () {
 };
 
 function App() {
-  const previousTasks = fetchLocalTasks() || defaultTasks;
-  const [tasks, setTasks] = useState(previousTasks);
+  const [tasks, setTasks] = useState([]);
+  useEffect(() => {
+    loadLocalTasks();
+  }, []);
+
   const [filter, setFilter] = useState("All");
+
+  function loadLocalTasks() {
+    const localTasks = fetchLocalTasks();
+
+    localTasks !== null ? setTasks(localTasks) : setTasks(defaultTasks);
+  }
 
   function addTask(task) {
     const newTasks = tasks.concat(task);
